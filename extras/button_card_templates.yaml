@@ -1,0 +1,660 @@
+# Replace the whole button_card_templates: block in your Raw configuration editor with this
+button_card_templates:
+
+  # ---------- shared base: card look + all CSS classes ----------
+  neu_base:
+    section_mode: true
+    show_icon: false
+    show_name: false
+    show_state: false
+    show_label: false
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+    styles:
+      card:
+        - background: "#ECE7E1"
+        - border: none
+        - border-radius: 20px
+        - box-shadow: 8px 8px 16px #D6CFC6, -8px -8px 16px #FBF8F4
+        - padding: 20px
+        - height: 100%
+        - box-sizing: border-box
+        - overflow: visible
+        - color: "#4a4239"
+        - font-family: "'Nunito Sans', -apple-system, 'Segoe UI', Roboto, sans-serif"
+      grid:
+        - grid-template-areas: '"c"'
+        - grid-template-columns: 1fr
+        - grid-template-rows: 1fr
+        - height: 100%
+      custom_fields:
+        c:
+          - height: 100%
+          - width: 100%
+          - text-align: left
+          - justify-self: stretch
+          - align-self: stretch
+    extra_styles: |
+      ha-card { transition: box-shadow .3s ease, transform .15s ease; }
+      #container ha-icon { --mdc-icon-size: var(--neu-icon, 24px) !important; width: var(--neu-icon, 24px); height: var(--neu-icon, 24px); margin: 0; flex-shrink: 0; display: inline-flex; }
+      .tap { cursor: pointer; }
+      .tap:active { opacity: .7; }
+      .ctl { display: block; }
+      .rng { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 16px; margin: 0; padding: 0 4px; box-sizing: border-box; border-radius: 999px; background: transparent; cursor: pointer; outline: none; touch-action: none; box-shadow: inset 4px 4px 8px #D6CFC6, inset -4px -4px 8px #FBF8F4; }
+      .rng::-webkit-slider-runnable-track { height: 8px; border-radius: 999px; background: linear-gradient(to right, var(--c) var(--p), transparent var(--p)); }
+      .rng::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -5px; border-radius: 50%; background: #ECE7E1; box-shadow: 2px 2px 5px #CFC7BD, -2px -2px 5px #FFFFFF; }
+      .rng::-moz-range-track { height: 8px; border-radius: 999px; background: linear-gradient(to right, var(--c) var(--p), transparent var(--p)); }
+      .rng::-moz-range-thumb { width: 18px; height: 18px; border: none; border-radius: 50%; background: #ECE7E1; box-shadow: 2px 2px 5px #CFC7BD, -2px -2px 5px #FFFFFF; }
+      ha-card[style*="cursor: pointer"]:active { transform: scale(.98); }
+      .disp { font-family: Poppins, sans-serif; }
+      .mono { font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, Consolas, monospace; }
+      .col { display: flex; flex-direction: column; height: 100%; }
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+      .name { font-family: Poppins, sans-serif; font-weight: 600; font-size: 16px; line-height: 1.25; color: #4a4239; }
+      .name.lg { font-size: 20px; }
+      .sub { font-size: 12px; color: #8a7f73; margin-top: 3px; }
+      .lbl { font-size: 12px; color: #756a60; margin-bottom: 4px; }
+      .temp { font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace; font-weight: 700; font-size: 28px; line-height: 1; color: #4a4239; letter-spacing: -.5px; }
+      .temp.lg { font-size: 34px; }
+      .temp small { font-size: .5em; font-weight: 500; margin-left: 2px; }
+      .dim .name { color: #8a7f73; }
+      .dim .temp { color: #6b6258; }
+      .tg { width: 44px; height: 44px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; --neu-icon: 22px; transition: all .3s ease; }
+      .tg.lg { width: 64px; height: 64px; border-radius: 20px; --neu-icon: 30px; }
+      .raised { box-shadow: 8px 8px 16px #D6CFC6, -8px -8px 16px #FBF8F4; }
+      .raised-sm { box-shadow: 5px 5px 11px #D6CFC6, -5px -5px 11px #FBF8F4; color: #b5aa9e; }
+      .glow-amber { background: radial-gradient(circle at 50% 45%, #FCF3E3 0%, #F7DDB0 55%, #EDBB74 100%); box-shadow: inset 4px 4px 9px #CF9145, inset -3px -3px 8px #FFC97E; color: #E8A552; }
+      .glow-sage  { background: radial-gradient(circle at 50% 45%, #F0F6EB 0%, #CFE4C3 55%, #9CC686 100%); box-shadow: inset 4px 4px 9px #5F8A4D, inset -3px -3px 8px #9FD187; color: #6E9E58; }
+      .glow-blue  { background: radial-gradient(circle at 50% 45%, #EEF2F9 0%, #CCD8EE 55%, #93ABD3 100%); box-shadow: inset 4px 4px 9px #47689A, inset -3px -3px 8px #8FAEDD; color: #5B7DB1; }
+      .bar-l { display: flex; justify-content: space-between; font-size: 12px; color: #756a60; margin-bottom: 6px; }
+      .bar-l b { font-size: 12px; font-weight: 500; }
+      .track { height: 16px; border-radius: 999px; padding: 4px; box-sizing: border-box; box-shadow: inset 4px 4px 8px #D6CFC6, inset -4px -4px 8px #FBF8F4; }
+      .fill { height: 100%; border-radius: 999px; transition: width .5s ease; }
+      .hdr { display: flex; align-items: center; gap: 18px; }
+      .pill { display: flex; align-items: center; justify-content: center; gap: 8px; font-family: Poppins, sans-serif; font-weight: 600; font-size: 15px; --neu-icon: 18px; white-space: nowrap; }
+      .badge { font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 999px; box-shadow: inset 3px 3px 6px #D6CFC6, inset -3px -3px 6px #FBF8F4; }
+      .scene { display: flex; flex-direction: column; align-items: center; gap: 6px; --neu-icon: 22px; font-family: Poppins, sans-serif; font-weight: 500; font-size: 12px; color: #6b6258; }
+      .gauge { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+      .ring { position: relative; width: min(120px, 100%); aspect-ratio: 1; border-radius: 50%; box-shadow: inset 6px 6px 12px #D6CFC6, inset -6px -6px 12px #FBF8F4; }
+      .ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+      .gv { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .gnum { font-weight: 700; font-size: 20px; color: #4a4239; line-height: 1.1; }
+      .gu { font-size: 10px; color: #8a7f73; }
+      .glabel { font-family: Poppins, sans-serif; font-weight: 600; font-size: 13px; color: #6b6258; }
+      .np { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; box-sizing: border-box; margin-top: 10px; padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; color: #5B7DB1; --neu-icon: 14px; box-shadow: inset 3px 3px 6px #D6CFC6, inset -3px -3px 6px #FBF8F4; }
+      .np span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .np.paused { color: #8a7f73; }
+      .art { width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: #b5aa9e; --neu-icon: 28px; box-shadow: 5px 5px 11px #D6CFC6, -5px -5px 11px #FBF8F4; }
+      .ell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .ibtn { display: flex; align-items: center; justify-content: center; height: 100%; --neu-icon: 22px; }
+      .srow { display: flex; align-items: center; gap: 14px; }
+      .sico { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; --neu-icon: 20px; box-shadow: inset 4px 4px 8px #D6CFC6, inset -4px -4px 8px #FBF8F4; }
+
+  # ---------- header: greeting, title, clock, mode pills ----------
+  neu_header:
+    template: neu_base
+    triggers_update: all
+    variables:
+      title: My Home
+      user: ""
+      icon: mdi:home
+      temp: ""
+    styles:
+      card:
+        - background: none
+        - box-shadow: none
+        - padding: 4px 4px 8px
+        - height: auto
+      grid:
+        - display: flex
+        - flex-wrap: wrap
+        - align-items: center
+        - justify-content: space-between
+        - gap: 18px
+      custom_fields:
+        c:
+          - flex: 1 1 300px
+          - height: auto
+        modes:
+          - flex: 0 1 420px
+    custom_fields:
+      c: |
+        [[[
+          const v = variables, now = new Date(), h = now.getHours();
+          const greet = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+          const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+          const date = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).replace(',', '');
+          const t = v.temp && states[v.temp] && !isNaN(parseFloat(states[v.temp].state)) ? ' · ' + parseFloat(states[v.temp].state).toFixed(1) + '°C' : '';
+          const who = v.user || (user && user.name) || '';
+          return `<div class="hdr">
+            <div class="tg lg raised" style="color:#E8A552"><ha-icon icon="${v.icon}"></ha-icon></div>
+            <div>
+              <div style="font-size:13px;color:#6b6258">${greet}${who ? ', ' + who : ''}</div>
+              <div class="disp" style="font-weight:700;font-size:24px;line-height:1.25;color:#4a4239">${v.title}</div>
+              <div class="mono" style="font-size:11px;color:#8a7f73;letter-spacing:.5px;margin-top:2px">${time} · ${date}${t}</div>
+            </div>
+          </div>`;
+        ]]]
+      modes:
+        card:
+          type: horizontal-stack
+          cards:
+            - type: custom:button-card
+              template: neu_mode
+              variables:
+                option: Home
+                icon: mdi:home
+            - type: custom:button-card
+              template: neu_mode
+              variables:
+                option: Away
+                icon: mdi:airplane-takeoff
+            - type: custom:button-card
+              template: neu_mode
+              variables:
+                option: Night
+                icon: mdi:weather-night
+
+  # ---------- mode pill (Home / Away / Night) ----------
+  neu_mode:
+    template: neu_base
+    section_mode: false
+    entity: input_select.house_mode
+    variables:
+      option: Home
+      icon: mdi:home
+    tap_action:
+      action: perform-action
+      perform_action: input_select.select_option
+      haptic: light
+      data:
+        entity_id: "[[[ return entity.entity_id ]]]"
+        option: "[[[ return variables.option ]]]"
+    styles:
+      card:
+        - padding: 14px 18px
+        - height: auto
+        - cursor: pointer
+        - box-shadow: >
+            [[[ return entity && entity.state === variables.option
+                ? 'inset 6px 6px 12px #D6CFC6, inset -6px -6px 12px #FBF8F4'
+                : '5px 5px 11px #D6CFC6, -5px -5px 11px #FBF8F4'; ]]]
+        - color: "[[[ return entity && entity.state === variables.option ? '#E8A552' : '#756a60' ]]]"
+    custom_fields:
+      c: |
+        [[[ return `<div class="pill"><ha-icon icon="${variables.icon}"></ha-icon><span>${variables.option}</span></div>`; ]]]
+
+  # ---------- section title ("Floor Plan" ... "6 rooms · 18 devices") ----------
+  neu_title:
+    template: neu_base
+    variables:
+      title: ""
+      note: ""
+    styles:
+      card:
+        - background: none
+        - box-shadow: none
+        - padding: 6px 4px 0
+        - height: auto
+    custom_fields:
+      c: |
+        [[[ return `<div class="row">
+          <div class="disp" style="font-weight:600;font-size:18px;color:#4a4239">${variables.title || ''}</div>
+          <div style="font-size:12px;color:#8a7f73">${variables.note || ''}</div>
+        </div>`; ]]]
+
+  # ---------- room card: size small | wide | big ----------
+  neu_room:
+    template: neu_base
+    variables:
+      name: Room
+      size: small          # small | wide | big
+      tone: amber          # amber | sage | blue
+      temp: ""             # temperature sensor   (tap → history)
+      climate: ""          # climate entity       (tap → AC controls)
+      lock: ""             # lock entity          (tap → lock dialog)
+      media: ""            # media_player         (tap → player)
+      cover: ""            # cover / shutter      (slider + tap label to open/close)
+      devices: []          # entities counted in "N devices · M active"
+      dimmer: true         # brightness slider for the main light
+      icon_on: mdi:lightbulb
+      icon_off: mdi:lightbulb-outline
+    tap_action:
+      action: none
+    hold_action:
+      action: more-info
+    styles:
+      card:
+        - padding: "[[[ return variables.size === 'big' ? '24px' : '20px' ]]]"
+        - box-shadow: >
+            [[[
+              const ACT = ['on','open','opening','playing','heat','cool','heat_cool','auto','dry','fan_only','unlocked'];
+              const ids = (variables.devices && variables.devices.length) ? variables.devices : (entity ? [entity.entity_id] : []);
+              const on = entity ? entity.state === 'on' : ids.some(i => states[i] && ACT.includes(states[i].state));
+              return on ? '8px 8px 16px #D6CFC6, -8px -8px 16px #FBF8F4' : '4px 4px 9px #DCD5CC, -4px -4px 9px #F4EFE9';
+            ]]]
+    custom_fields:
+      c: |
+        [[[
+          // tiny global helper used by the inline tap/slider handlers below
+          if (!window.neuHA) window.neuHA = {
+            hass: () => document.querySelector('home-assistant').hass,
+            call: (d, s, data) => window.neuHA.hass().callService(d, s, data),
+            toggle: (e, id) => { e.stopPropagation(); window.neuHA.call('homeassistant', 'toggle', { entity_id: id }); },
+            more: (e, id) => { e.stopPropagation(); e.target.dispatchEvent(new CustomEvent('hass-more-info', { bubbles: true, composed: true, detail: { entityId: id } })); },
+            light: (id, v) => v > 0 ? window.neuHA.call('light', 'turn_on', { entity_id: id, brightness_pct: v }) : window.neuHA.call('light', 'turn_off', { entity_id: id }),
+            cover: (id, v) => window.neuHA.call('cover', 'set_cover_position', { entity_id: id, position: v }),
+            live: (el, txt) => { el.style.setProperty('--p', el.value + '%'); const b = el.closest('.ctl').querySelector('b'); if (b) b.textContent = txt; }
+          };
+
+          const v = variables, S = id => (id && states[id]) || null;
+          const ACT = ['on','open','opening','playing','heat','cool','heat_cool','auto','dry','fan_only','unlocked'];
+          const ids = (v.devices && v.devices.length) ? v.devices : (entity ? [entity.entity_id] : []);
+          const total = ids.length;
+          const active = ids.filter(i => S(i) && ACT.includes(S(i).state)).length;
+          const on = entity ? entity.state === 'on' : active > 0;
+          const size = v.size || 'small', lg = size === 'big';
+          const stop = `onpointerdown="event.stopPropagation()" onmousedown="event.stopPropagation()" ontouchstart="event.stopPropagation()" onclick="event.stopPropagation()"`;
+
+          // temperature → history
+          const t = S(v.temp);
+          const tv = (t && !isNaN(parseFloat(t.state))) ? parseFloat(t.state).toFixed(1) : '--';
+          const tapT = t ? `class="tap" onclick="neuHA.more(event,'${v.temp}')"` : '';
+          const temp = `<div ${tapT}>${lg ? '<div class="lbl">Temperature</div>' : ''}<div class="temp${lg ? ' lg' : ''}">${tv}<small>°C</small></div></div>`;
+
+          // light toggle (only the bulb)
+          const tg = entity
+            ? `<div class="tg tap${lg ? ' lg' : ''} ${on ? 'glow-' + (v.tone || 'amber') : 'raised-sm'}" onclick="neuHA.toggle(event,'${entity.entity_id}')"><ha-icon icon="${on ? v.icon_on : v.icon_off}"></ha-icon></div>`
+            : '';
+          const sub = total ? `${total} device${total > 1 ? 's' : ''} · ${active ? active + ' active' : 'off'}` : '';
+
+          // controls
+          let ctl = '';
+          if (v.dimmer && entity && entity.entity_id.startsWith('light.')) {
+            const b = entity.state === 'on' ? Math.round((entity.attributes.brightness || 255) / 2.55) : 0;
+            ctl += `<div class="ctl"><div class="bar-l"><span>Dimmer</span><b class="mono" style="color:#E8A552">${b}%</b></div>
+              <input class="rng" type="range" min="0" max="100" step="1" value="${b}" style="--p:${b}%;--c:#E8A552" ${stop}
+                oninput="neuHA.live(this, this.value + '%')"
+                onchange="neuHA.light('${entity.entity_id}', +this.value)"></div>`;
+          }
+          const c = S(v.climate);
+          if (c) {
+            const m = c.state === 'heat_cool' ? 'Auto' : c.state.charAt(0).toUpperCase() + c.state.slice(1).replace('_', ' ');
+            const tt = parseFloat(c.attributes.temperature);
+            const pct = (c.state === 'off' || isNaN(tt)) ? 0 : Math.max(0, Math.min(100, ((tt - 16) / 14) * 100));
+            ctl += `<div class="ctl tap" onclick="neuHA.more(event,'${v.climate}')"><div class="bar-l"><span>Climate</span><b class="mono" style="color:#7FB069">${isNaN(tt) || c.state === 'off' ? m : m + ' · ' + tt + '°'}</b></div>
+              <div class="track"><div class="fill" style="width:${pct}%;background:#7FB069"></div></div></div>`;
+          }
+          let coverCtl = '';
+          const cv = S(v.cover);
+          if (cv) {
+            const pos = cv.attributes.current_position;
+            const hasPos = pos !== undefined && pos !== null;
+            const p = hasPos ? Number(pos) : (cv.state === 'open' ? 100 : 0);
+            const txt = cv.state === 'opening' ? 'Opening' : cv.state === 'closing' ? 'Closing' : (p === 0 ? 'Closed' : p + '%');
+            const label = `<div class="bar-l"><span class="tap" onclick="neuHA.toggle(event,'${v.cover}')">Shutter <ha-icon icon="${p > 0 ? 'mdi:arrow-down' : 'mdi:arrow-up'}" style="--neu-icon:12px"></ha-icon></span><b class="mono" style="color:#5B7DB1">${txt}</b></div>`;
+            coverCtl = hasPos
+              ? `<div class="ctl">${label}<input class="rng" type="range" min="0" max="100" step="1" value="${p}" style="--p:${p}%;--c:#5B7DB1" ${stop}
+                  oninput="neuHA.live(this, +this.value === 0 ? 'Closed' : this.value + '%')"
+                  onchange="neuHA.cover('${v.cover}', +this.value)"></div>`
+              : `<div class="ctl tap" onclick="neuHA.toggle(event,'${v.cover}')">${label}<div class="track"><div class="fill" style="width:${p}%;background:#5B7DB1"></div></div></div>`;
+            ctl += coverCtl;
+          }
+
+          // now playing → mini player (tap → Sonos dialog)
+          const mp = S(v.media);
+          let np = '', player = '';
+          if (mp && ['playing', 'paused', 'buffering'].includes(mp.state)) {
+            const a = mp.attributes, mid = v.media;
+            const title = a.media_title || a.source || 'Playing';
+            const artist = a.media_artist || a.media_album_name || '';
+            np = `<div class="np tap${mp.state === 'playing' ? '' : ' paused'}" onclick="neuHA.more(event,'${mid}')"><ha-icon icon="${mp.state === 'playing' ? 'mdi:music' : 'mdi:pause'}"></ha-icon><span>${title}${artist ? ' · ' + artist : ''}</span></div>`;
+            const pic = a.entity_picture ? `background-image:url('${a.entity_picture}')` : '';
+            const vol = a.volume_level !== undefined ? Math.round(a.volume_level * 100) : null;
+            player = `<div class="tap" style="display:flex;gap:14px;align-items:center" onclick="neuHA.more(event,'${mid}')">
+                <div class="art" style="${pic}">${pic ? '' : '<ha-icon icon="mdi:speaker"></ha-icon>'}</div>
+                <div style="min-width:0;flex:1">
+                  <div class="mono" style="font-size:10px;letter-spacing:1px;color:${mp.state === 'playing' ? '#5B7DB1' : '#8a7f73'}">${mp.state.toUpperCase()} · ${a.friendly_name || ''}</div>
+                  <div class="disp ell" style="font-weight:600;font-size:15px;color:#4a4239;margin-top:2px">${title}</div>
+                  <div class="ell" style="font-size:12px;color:#8a7f73">${artist}</div>
+                </div>
+                <div class="tg raised-sm tap" style="width:40px;height:40px;border-radius:14px;--neu-icon:20px;color:#5B7DB1" onclick="event.stopPropagation();neuHA.call('media_player','media_play_pause',{entity_id:'${mid}'})">
+                  <ha-icon icon="${mp.state === 'playing' ? 'mdi:pause' : 'mdi:play'}"></ha-icon></div>
+              </div>
+              ${vol !== null ? `<div class="ctl" style="margin-top:14px"><div class="bar-l"><span>Volume</span><b class="mono" style="color:#5B7DB1">${vol}%</b></div>
+                <input class="rng" type="range" min="0" max="100" step="1" value="${vol}" style="--p:${vol}%;--c:#5B7DB1" ${stop}
+                  oninput="neuHA.live(this, this.value + '%')"
+                  onchange="neuHA.call('media_player','volume_set',{entity_id:'${mid}',volume_level:this.value/100})"></div>` : ''}`;
+          }
+
+          // lock → lock dialog
+          const lk = S(v.lock);
+          const lockLine = lk ? `<div class="sub tap" style="display:flex;align-items:center;gap:4px" onclick="neuHA.more(event,'${v.lock}')">
+              <ha-icon icon="${lk.state === 'locked' ? 'mdi:lock' : 'mdi:lock-open-variant'}" style="--neu-icon:14px;color:${lk.state === 'locked' ? '#7FB069' : '#E8A552'}"></ha-icon>
+              ${lk.state === 'locked' ? 'Door secured' : 'Door unlocked'}</div>` : '';
+
+          const dim = on ? '' : ' dim';
+          if (size === 'big' || size === 'wide') return `<div class="col${dim}">
+              <div class="top"><div style="min-width:0"><div class="name${lg ? ' lg' : ''}">${v.name}</div><div class="sub">${sub}</div>${lg ? '' : np}</div>${tg}</div>
+              ${lg && player ? `<div style="margin-top:20px">${player}</div>` : ''}
+              <div class="row" style="margin-top:auto;padding-top:16px;align-items:flex-end;gap:24px">
+                <div>${temp}${lockLine}</div>
+                <div style="width:${lg ? 52 : 42}%;display:flex;flex-direction:column;gap:12px">${ctl}</div>
+              </div></div>`;
+          return `<div class="col${dim}">
+              <div class="top"><div style="min-width:0"><div class="name">${v.name}</div>${np}</div>${tg}</div>
+              <div style="margin-top:auto">${temp}${lockLine || `<div class="sub">${sub}</div>`}</div>
+              ${coverCtl ? `<div style="margin-top:14px">${coverCtl}</div>` : ''}
+            </div>`;
+        ]]]
+
+  # ---------- round icon button (used inside media / shutter cards) ----------
+  neu_btn:
+    template: neu_base
+    section_mode: false
+    variables:
+      icon: mdi:play
+      service: ""
+      color: "#756a60"
+    tap_action:
+      action: perform-action
+      perform_action: "[[[ return variables.service ]]]"
+      haptic: light
+      data:
+        entity_id: "[[[ return entity.entity_id ]]]"
+    styles:
+      card:
+        - padding: 0
+        - height: 44px
+        - border-radius: 14px
+        - cursor: pointer
+        - color: "[[[ return variables.color ]]]"
+        - box-shadow: 5px 5px 11px #D6CFC6, -5px -5px 11px #FBF8F4
+    custom_fields:
+      c: |
+        [[[ return `<div class="ibtn"><ha-icon icon="${variables.icon}"></ha-icon></div>`; ]]]
+
+  # ---------- now playing (Sonos / any media_player) ----------
+  neu_media:
+    template: neu_base
+    variables:
+      name: ""
+    tap_action:
+      action: more-info
+    styles:
+      card:
+        - padding: 20px
+      grid:
+        - grid-template-areas: '"c" "ctrl"'
+        - grid-template-rows: 1fr auto
+        - row-gap: 16px
+      custom_fields:
+        c:
+          - height: auto
+          - align-self: start
+        ctrl:
+          - width: 100%
+    custom_fields:
+      c: |
+        [[[
+          const a = entity ? entity.attributes : {};
+          const st = entity ? entity.state : 'unavailable';
+          const live = ['playing', 'paused', 'buffering'].includes(st);
+          const title = live ? (a.media_title || a.source || 'Playing') : 'Nothing playing';
+          const artist = live ? (a.media_artist || a.media_album_name || '') : (a.source || '');
+          const pic = live && a.entity_picture ? `background-image:url('${a.entity_picture}')` : '';
+          const vol = a.volume_level !== undefined ? Math.round(a.volume_level * 100) : null;
+          const name = variables.name || a.friendly_name || '';
+          return `<div style="display:flex;gap:14px;align-items:center">
+              <div class="art" style="${pic}">${pic ? '' : '<ha-icon icon="mdi:speaker"></ha-icon>'}</div>
+              <div style="min-width:0;flex:1">
+                <div class="mono" style="font-size:10px;letter-spacing:1px;color:${st === 'playing' ? '#5B7DB1' : '#8a7f73'}">${st.toUpperCase()} · ${name}</div>
+                <div class="disp ell" style="font-weight:600;font-size:15px;color:#4a4239;margin-top:2px">${title}</div>
+                <div class="ell" style="font-size:12px;color:#8a7f73">${artist}</div>
+              </div>
+            </div>
+            ${vol !== null ? `<div style="margin-top:14px"><div class="bar-l"><span>Volume</span><b class="mono" style="color:#5B7DB1">${vol}%</b></div>
+              <div class="track"><div class="fill" style="width:${vol}%;background:#5B7DB1"></div></div></div>` : ''}`;
+        ]]]
+      ctrl:
+        card:
+          type: grid
+          columns: 5
+          square: false
+          cards:
+            - type: custom:button-card
+              template: neu_btn
+              entity: "[[[ return entity.entity_id ]]]"
+              variables:
+                icon: mdi:volume-minus
+                service: media_player.volume_down
+            - type: custom:button-card
+              template: neu_btn
+              entity: "[[[ return entity.entity_id ]]]"
+              variables:
+                icon: mdi:skip-previous
+                service: media_player.media_previous_track
+            - type: custom:button-card
+              template: neu_btn
+              entity: "[[[ return entity.entity_id ]]]"
+              variables:
+                icon: "[[[ return entity.state === 'playing' ? 'mdi:pause' : 'mdi:play' ]]]"
+                service: media_player.media_play_pause
+                color: "#5B7DB1"
+            - type: custom:button-card
+              template: neu_btn
+              entity: "[[[ return entity.entity_id ]]]"
+              variables:
+                icon: mdi:skip-next
+                service: media_player.media_next_track
+            - type: custom:button-card
+              template: neu_btn
+              entity: "[[[ return entity.entity_id ]]]"
+              variables:
+                icon: mdi:volume-plus
+                service: media_player.volume_up
+
+  # ---------- shutter / blind with open-stop-close ----------
+  neu_shutter:
+    template: neu_base
+    variables:
+      name: ""
+    tap_action:
+      action: more-info
+    styles:
+      grid:
+        - grid-template-areas: '"c" "ctrl"'
+        - grid-template-rows: 1fr auto
+        - row-gap: 14px
+      custom_fields:
+        c:
+          - height: auto
+        ctrl:
+          - width: 100%
+    custom_fields:
+      c: |
+        [[[
+          const a = entity ? entity.attributes : {};
+          const st = entity ? entity.state : 'unavailable';
+          const pos = a.current_position;
+          const p = pos !== undefined && pos !== null ? Number(pos) : (st === 'open' ? 100 : 0);
+          const txt = st === 'opening' ? 'Opening' : st === 'closing' ? 'Closing' : (p === 0 ? 'Closed' : p + '% open');
+          const name = variables.name || a.friendly_name || '';
+          return `<div class="top"><div class="name${p === 0 ? '' : ''}">${name}</div>
+              <div class="tg ${p > 0 ? 'glow-blue' : 'raised-sm'}" style="width:36px;height:36px;border-radius:12px;--neu-icon:18px"><ha-icon icon="${p > 0 ? 'mdi:blinds-open' : 'mdi:blinds'}"></ha-icon></div></div>
+            <div class="bar-l" style="margin-top:10px"><span>Position</span><b class="mono" style="color:#5B7DB1">${txt}</b></div>
+            <div class="track"><div class="fill" style="width:${p}%;background:#5B7DB1"></div></div>`;
+        ]]]
+      ctrl:
+        card:
+          type: grid
+          columns: 3
+          square: false
+          cards:
+            - type: custom:button-card
+              template: neu_btn
+              entity: "[[[ return entity.entity_id ]]]"
+              variables:
+                icon: mdi:arrow-up
+                service: cover.open_cover
+            - type: custom:button-card
+              template: neu_btn
+              entity: "[[[ return entity.entity_id ]]]"
+              variables:
+                icon: mdi:stop
+                service: cover.stop_cover
+            - type: custom:button-card
+              template: neu_btn
+              entity: "[[[ return entity.entity_id ]]]"
+              variables:
+                icon: mdi:arrow-down
+                service: cover.close_cover
+
+  # ---------- panel: raised box with title/badge + any card inside ----------
+  neu_panel:
+    template: neu_base
+    variables:
+      title: ""
+      note: ""
+      badge: ""
+      badge_entity: ""     # alarm_control_panel → ARMED / DISARMED badge
+    styles:
+      card:
+        - padding: 24px
+      grid:
+        - grid-template-areas: '"c" "body"'
+        - grid-template-rows: auto 1fr
+        - row-gap: 18px
+      custom_fields:
+        c:
+          - height: auto
+        body:
+          - width: 100%
+          - align-self: start
+    custom_fields:
+      c: |
+        [[[
+          const v = variables;
+          let b = v.badge, col = '#7FB069';
+          const e = v.badge_entity && states[v.badge_entity];
+          if (e) {
+            const s = e.state;
+            if (s.startsWith('armed')) b = 'ARMED';
+            else if (s === 'disarmed') { b = 'DISARMED'; col = '#E8A552'; }
+            else if (s === 'triggered') { b = 'ALARM'; col = '#C8553D'; }
+            else { b = s.toUpperCase(); col = '#8a7f73'; }
+          }
+          const right = b ? `<span class="badge" style="color:${col}">${b}</span>`
+                          : (v.note ? `<span style="font-size:12px;color:#8a7f73">${v.note}</span>` : '');
+          return `<div class="row"><div class="disp" style="font-weight:600;font-size:18px;color:#4a4239">${v.title}</div>${right}</div>`;
+        ]]]
+
+  # ---------- scene / script button (use inside a panel) ----------
+  neu_scene:
+    template: neu_base
+    section_mode: false
+    variables:
+      name: ""
+      icon: ""
+      color: "#E8A552"
+    tap_action:
+      action: toggle
+      haptic: light
+    styles:
+      card:
+        - padding: 14px 6px 12px
+        - border-radius: 16px
+        - height: auto
+        - cursor: pointer
+        - box-shadow: 5px 5px 11px #D6CFC6, -5px -5px 11px #FBF8F4
+    custom_fields:
+      c: |
+        [[[
+          const n = variables.name || (entity && entity.attributes.friendly_name) || '';
+          const ic = variables.icon || (entity && entity.attributes.icon) || 'mdi:palette';
+          return `<div class="scene" style="height:100%;justify-content:center"><ha-icon icon="${ic}" style="color:${variables.color}"></ha-icon><span>${n}</span></div>`;
+        ]]]
+
+  # ---------- circular gauge (use inside a panel) ----------
+  neu_gauge:
+    template: neu_base
+    section_mode: false
+    variables:
+      label: ""
+      max: 100
+      color: "#E8A552"
+      decimals: 1
+    tap_action:
+      action: more-info
+    styles:
+      card:
+        - background: none
+        - box-shadow: none
+        - padding: 8px 0
+        - height: auto
+        - cursor: pointer
+    custom_fields:
+      c: |
+        [[[
+          const v = variables, e = entity;
+          const val = (e && !isNaN(parseFloat(e.state))) ? parseFloat(e.state) : null;
+          const p = val === null ? 0 : Math.max(0, Math.min(1, val / (v.max || 100)));
+          const R = 46, C = 2 * Math.PI * R;
+          const unit = v.unit !== undefined ? v.unit : (e ? (e.attributes.unit_of_measurement || '') : '');
+          const shown = val === null ? '--' : val.toFixed(v.decimals);
+          return `<div class="gauge"><div class="ring">
+              <svg viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="${R}" fill="none" stroke="#E2DBD2" stroke-width="7"/>
+                <circle cx="60" cy="60" r="${R}" fill="none" stroke="${v.color}" stroke-width="7" stroke-linecap="round"
+                  stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - p)}" style="transition:stroke-dashoffset .6s ease"/>
+              </svg>
+              <div class="gv"><div class="mono gnum">${shown}</div><div class="gu">${unit}</div></div>
+            </div><div class="glabel">${v.label}</div></div>`;
+        ]]]
+
+  # ---------- status row: locks / cameras / alarm (use inside a panel) ----------
+  neu_row:
+    template: neu_base
+    section_mode: false
+    variables:
+      title: ""
+      icon: mdi:check
+      color: "#7FB069"
+      entities: []         # entities to check
+      ok_state: []         # states that count as OK
+      suffix: ""           # "4 of 4 <suffix>"
+      sub: ""              # optional custom subtitle
+      right: check         # check | fraction
+    tap_action:
+      action: more-info
+    styles:
+      card:
+        - background: none
+        - box-shadow: none
+        - padding: 8px 0
+        - height: auto
+    custom_fields:
+      c: |
+        [[[
+          const v = variables;
+          const ids = (v.entities && v.entities.length) ? v.entities : (entity ? [entity.entity_id] : []);
+          const okS = [].concat(v.ok_state || []);
+          const N = ids.length;
+          const n = ids.filter(i => states[i] && okS.includes(states[i].state)).length;
+          const all = N > 0 && n === N;
+          const sub = v.sub || `${n} of ${N} ${v.suffix}`;
+          const right = v.right === 'fraction'
+            ? `<span class="mono" style="font-size:12px;font-weight:600;color:${all ? '#5B7DB1' : '#E8A552'}">${n}/${N}</span>`
+            : `<ha-icon icon="${all ? 'mdi:check' : 'mdi:alert-circle-outline'}" style="--neu-icon:18px;color:${all ? '#7FB069' : '#E8A552'}"></ha-icon>`;
+          return `<div class="srow">
+              <div class="sico"><ha-icon icon="${v.icon}" style="color:${v.color}"></ha-icon></div>
+              <div style="flex:1;min-width:0">
+                <div class="disp" style="font-weight:600;font-size:14px;color:#4a4239">${v.title}</div>
+                <div style="font-size:12px;color:#8a7f73">${sub}</div>
+              </div>${right}
+            </div>`;
+        ]]]
+

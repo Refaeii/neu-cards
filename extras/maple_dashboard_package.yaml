@@ -1,0 +1,11 @@
+# /config/packages/maple_dashboard.yaml
+# Helpers used by the Maple neumorphic dashboard.
+
+input_select:
+  house_mode:
+    name: House Mode
+    icon: mdi:home-switch
+    options:
+      - Home
+      - Away
+      - Night

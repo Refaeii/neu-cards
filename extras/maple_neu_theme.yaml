@@ -1,0 +1,69 @@
+# /config/themes/maple_neu.yaml
+# Soft neumorphic beige theme (Maple Ridge style).
+# Also styles Mushroom / tile / any standard card you add later.
+
+maple_neu:
+  # Base palette
+  primary-color: "#E8A552"
+  accent-color: "#E8A552"
+  primary-background-color: "#ECE7E1"
+  secondary-background-color: "#E4DED7"
+  lovelace-background: "#ECE7E1"
+  card-background-color: "#ECE7E1"
+  primary-text-color: "#4a4239"
+  secondary-text-color: "#8a7f73"
+  disabled-text-color: "#b5aa9e"
+  divider-color: "#DCD5CC"
+  primary-font-family: "'Nunito Sans', -apple-system, 'Segoe UI', Roboto, sans-serif"
+
+  # Cards (neumorphic raised)
+  ha-card-background: "#ECE7E1"
+  ha-card-border-width: 0px
+  ha-card-border-radius: 20px
+  ha-card-box-shadow: "8px 8px 16px #D6CFC6, -8px -8px 16px #FBF8F4"
+  ha-section-title-font-family: "Poppins, sans-serif"
+
+  # Sections view spacing (room for the soft shadows)
+  ha-section-grid-row-gap: 20px
+  ha-section-grid-column-gap: 20px
+  ha-view-sections-column-gap: 24px
+  ha-view-sections-row-gap: 20px
+
+  # Header / sidebar
+  app-header-background-color: "#ECE7E1"
+  app-header-text-color: "#4a4239"
+  app-header-border-bottom: none
+  sidebar-background-color: "#E8E2DB"
+  sidebar-text-color: "#6b6258"
+  sidebar-icon-color: "#8a7f73"
+  sidebar-selected-icon-color: "#E8A552"
+  sidebar-selected-text-color: "#4a4239"
+
+  # States
+  state-icon-color: "#8a7f73"
+  state-active-color: "#E8A552"
+  state-light-active-color: "#E8A552"
+  state-switch-active-color: "#7FB069"
+  state-climate-cool-color: "#5B7DB1"
+  state-climate-heat-color: "#E8A552"
+  state-lock-locked-color: "#7FB069"
+  state-lock-unlocked-color: "#E8A552"
+  success-color: "#7FB069"
+  warning-color: "#E8A552"
+  info-color: "#5B7DB1"
+  error-color: "#C8553D"
+
+  # Inputs / sliders
+  input-fill-color: "#E4DED7"
+  slider-track-color: "#DCD5CC"
+  switch-checked-color: "#7FB069"
+  switch-checked-button-color: "#FBF8F4"
+
+  # Mushroom (so Mushroom cards match the look)
+  mush-card-primary-font-weight: "600"
+  mush-card-secondary-color: "#8a7f73"
+  mush-icon-border-radius: 16px
+  mush-control-border-radius: 14px
+  mush-chip-background: "#ECE7E1"
+  mush-chip-box-shadow: "5px 5px 11px #D6CFC6, -5px -5px 11px #FBF8F4"
+  mush-chip-border-radius: 16px
