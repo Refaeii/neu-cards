@@ -7,7 +7,7 @@
  * Cards:  custom:neu-room-card   custom:neu-media-card   custom:neu-shutter-card
  */
 
-const NEU_VERSION = "1.1.0";
+const NEU_VERSION = "1.1.1";
 
 class NeuBase extends HTMLElement {
   connectedCallback() {
@@ -256,9 +256,13 @@ class NeuHeaderCard extends NeuBase {
     const me = c.mode_entity;
     const st = me && this._hass && this._hass.states[me];
     const options = c.modes || (st && st.attributes.options) || [];
+    // the template's own "modes" field is hidden; buttons go in "pills"
+    // (button-card concatenates arrays when merging templates, so we can't override it)
+    cfg.styles = { custom_fields: { modes: [{ display: "none" }], pills: [{ flex: "0 1 420px" }] } };
     if (me && options.length) {
       cfg.custom_fields = {
-        modes: {
+        modes: "",
+        pills: {
           card: {
             type: "horizontal-stack",
             cards: options.map((o) => bc("neu_mode", {
@@ -269,7 +273,7 @@ class NeuHeaderCard extends NeuBase {
         },
       };
     } else {
-      cfg.custom_fields = { modes: " " };
+      cfg.custom_fields = { modes: "" };
     }
     return cfg;
   }
