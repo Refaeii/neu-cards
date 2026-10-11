@@ -7,7 +7,7 @@
  * Cards:  custom:neu-room-card   custom:neu-media-card   custom:neu-shutter-card
  */
 
-const NEU_VERSION = "1.1.1";
+const NEU_VERSION = "1.1.2";
 
 class NeuBase extends HTMLElement {
   connectedCallback() {
@@ -247,6 +247,10 @@ const colorSel = { select: { mode: "dropdown", options: NEU_COLORS } };
 const bc = (template, extra = {}) => ({ type: "custom:button-card", template, ...extra });
 
 /* ---------------- Header (title + clock + mode buttons) ---------------- */
+const MODE_CONFIRM = {
+  away: "Lights off, shutters closed, doors locked, alarm armed.",
+  night: "Lights off, shutters closed, doors locked, alarm armed (night).",
+};
 const MODE_ICONS = { home: "mdi:home", away: "mdi:airplane-takeoff", night: "mdi:weather-night", vacation: "mdi:beach", guest: "mdi:account-multiple", sleep: "mdi:sleep" };
 
 class NeuHeaderCard extends NeuBase {
@@ -265,10 +269,17 @@ class NeuHeaderCard extends NeuBase {
         pills: {
           card: {
             type: "horizontal-stack",
-            cards: options.map((o) => bc("neu_mode", {
-              entity: me,
-              variables: { option: o, icon: (c.mode_icons && c.mode_icons[o]) || MODE_ICONS[String(o).toLowerCase()] || "mdi:circle-medium" },
-            })),
+            cards: options.map((o) => {
+              const pill = bc("neu_mode", {
+                entity: me,
+                variables: { option: o, icon: (c.mode_icons && c.mode_icons[o]) || MODE_ICONS[String(o).toLowerCase()] || "mdi:circle-medium" },
+              });
+              const ask = c.confirm_modes || ["Away", "Night"];
+              if (ask.includes(o)) {
+                pill.tap_action = { confirmation: { text: `Switch the house to ${o}?` + (MODE_CONFIRM[String(o).toLowerCase()] ? "\n" + MODE_CONFIRM[String(o).toLowerCase()] : "") } };
+              }
+              return pill;
+            }),
           },
         },
       };
@@ -294,8 +305,9 @@ class NeuHeaderCard extends NeuBase {
         ] },
         { name: "temp", selector: { entity: { domain: "sensor", device_class: "temperature" } } },
         { name: "mode_entity", selector: { entity: { domain: ["input_select", "select"] } } },
+        { name: "confirm_modes", selector: { select: { multiple: true, custom_value: true, options: ["Home", "Away", "Night"] } } },
       ],
-      computeLabel: (s) => ({ title: "Home name", user: "Greeting name (empty = logged-in user)", icon: "Icon", temp: "Outdoor temperature", mode_entity: "Mode helper (buttons = its options)" })[s.name],
+      computeLabel: (s) => ({ title: "Home name", user: "Greeting name (empty = logged-in user)", icon: "Icon", temp: "Outdoor temperature", mode_entity: "Mode helper (buttons = its options)", confirm_modes: "Ask to confirm (default: Away, Night)" })[s.name],
     };
   }
 }
@@ -469,12 +481,83 @@ class NeuSceneCard extends NeuBase {
   }
 }
 
+
+/* ---------------- Lights grid (one tile per light) ---------------- */
+const NEU_LIGHT_TILE = (entity, name, tone) => ({
+  type: "custom:button-card",
+  template: "neu_base",
+  section_mode: false,
+  entity,
+  variables: { name: name || "", tone: tone || "amber" },
+  tap_action: { action: "toggle", haptic: "light" },
+  hold_action: { action: "more-info" },
+  styles: {
+    card: [
+      { padding: "14px 6px 12px" },
+      { "border-radius": "16px" },
+      { height: "auto" },
+      { cursor: "pointer" },
+      { "box-shadow": "[[[ return entity && entity.state === 'on' ? '6px 6px 12px #D6CFC6, -6px -6px 12px #FBF8F4' : '3px 3px 7px #DCD5CC, -3px -3px 7px #F4EFE9' ]]]" },
+    ],
+  },
+  custom_fields: {
+    c: `[[[
+      const on = entity && entity.state === 'on';
+      const a = entity ? entity.attributes : {};
+      const n = variables.name || a.friendly_name || '';
+      const ic = a.icon || (on ? 'mdi:lightbulb' : 'mdi:lightbulb-outline');
+      const st = !entity ? 'n/a' : entity.state === 'unavailable' ? 'Offline' : on ? (a.brightness ? Math.round(a.brightness / 2.55) + '%' : 'On') : 'Off';
+      const glow = on ? 'glow-' + (variables.tone || 'amber') : 'raised-sm';
+      return '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-width:0">'
+        + '<div class="tg ' + glow + '" style="width:40px;height:40px;border-radius:14px;--neu-icon:20px"><ha-icon icon="' + ic + '"></ha-icon></div>'
+        + '<div class="disp ell" style="font-weight:600;font-size:13px;max-width:100%;color:' + (on ? '#4a4239' : '#8a7f73') + '">' + n + '</div>'
+        + '<div class="mono" style="font-size:11px;margin-top:-4px;color:' + (on ? '#E8A552' : '#b5aa9e') + '">' + st + '</div></div>';
+    ]]]`,
+  },
+});
+
+class NeuLightsCard extends NeuBase {
+  _buttonConfig() {
+    const c = this._config;
+    const list = (c.lights || []).map((l) => (typeof l === "string" ? { entity: l } : l)).filter((l) => l.entity);
+    const cols = c.columns || Math.min(Math.max(list.length, 1), 4);
+    const grid = {
+      type: "grid", columns: cols, square: false,
+      cards: list.map((l) => NEU_LIGHT_TILE(l.entity, l.name, c.tone)),
+    };
+    if (!c.title) return grid;
+    return bc("neu_panel", { variables: { title: c.title, note: c.note || "" }, custom_fields: { body: { card: grid } } });
+  }
+  getGridOptions() { return { columns: 12, rows: "auto" }; }
+  static getStubConfig(hass) {
+    return { lights: Object.keys(hass.states).filter((e) => e.startsWith("light.")).slice(0, 4) };
+  }
+  static getConfigForm() {
+    return {
+      schema: [
+        { name: "lights", required: true, selector: { entity: { multiple: true, domain: "light" } } },
+        { type: "grid", name: "", schema: [
+          { name: "columns", selector: { number: { min: 1, max: 6, mode: "box" } } },
+          { name: "tone", selector: { select: { mode: "dropdown", options: [
+            { value: "amber", label: "Amber" }, { value: "sage", label: "Sage" }, { value: "blue", label: "Blue" } ] } } },
+        ] },
+        { type: "grid", name: "", schema: [
+          { name: "title", selector: { text: {} } },
+          { name: "note", selector: { text: {} } },
+        ] },
+      ],
+      computeLabel: (s) => ({ lights: "Lights", columns: "Columns (empty = auto)", tone: "Glow colour", title: "Title (empty = tiles only)", note: "Note" })[s.name],
+    };
+  }
+}
+
 customElements.get("neu-header-card") || customElements.define("neu-header-card", NeuHeaderCard);
 customElements.get("neu-title-card") || customElements.define("neu-title-card", NeuTitleCard);
 customElements.get("neu-scenes-card") || customElements.define("neu-scenes-card", NeuScenesCard);
 customElements.get("neu-gauges-card") || customElements.define("neu-gauges-card", NeuGaugesCard);
 customElements.get("neu-security-card") || customElements.define("neu-security-card", NeuSecurityCard);
 customElements.get("neu-scene-card") || customElements.define("neu-scene-card", NeuSceneCard);
+customElements.get("neu-lights-card") || customElements.define("neu-lights-card", NeuLightsCard);
 customElements.get("neu-room-card") || customElements.define("neu-room-card", NeuRoomCard);
 customElements.get("neu-media-card") || customElements.define("neu-media-card", NeuMediaCard);
 customElements.get("neu-shutter-card") || customElements.define("neu-shutter-card", NeuShutterCard);
@@ -489,7 +572,8 @@ window.customCards.push(
   { type: "neu-scenes-card", name: "Neu Quick Scenes", description: "Panel of scene / script buttons", preview: true },
   { type: "neu-scene-card", name: "Neu Scene Button", description: "Single scene / script button", preview: true },
   { type: "neu-gauges-card", name: "Neu Gauges (Energy)", description: "Panel with up to 4 ring gauges", preview: true },
-  { type: "neu-security-card", name: "Neu Security", description: "Alarm, locks, cameras, sensors", preview: true }
+  { type: "neu-security-card", name: "Neu Security", description: "Alarm, locks, cameras, sensors", preview: true },
+  { type: "neu-lights-card", name: "Neu Lights", description: "Grid of light tiles - tap to toggle, hold for settings", preview: true }
 );
 
 console.info(`%c NEU-CARDS %c ${NEU_VERSION} `, "background:#E8A552;color:#fff;border-radius:4px 0 0 4px;padding:2px 6px", "background:#ECE7E1;color:#4a4239;border-radius:0 4px 4px 0;padding:2px 6px");
